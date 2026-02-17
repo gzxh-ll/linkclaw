@@ -1,4 +1,4 @@
-# linkclaw
+# linkclaw  中文版
 # 🦞 OpenClaw Manager
 
 高性能跨平台 AI 助手管理工具，基于 **Tauri 2.0 + React + TypeScript + Rust** 构建。
