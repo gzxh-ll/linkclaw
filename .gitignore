@@ -1,7 +1,62 @@
+# Dependencies
+node_modules/
+openclaw-manager/node_modules/
+
+# Build outputs
+dist/
+openclaw-manager/dist/
+openclaw-manager/src-tauri/target/
 openclaw-manager/release/
 openclaw-manager/release_extra/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.env
+.envrc
+
+# Secrets and tokens (never commit!)
+secrets.yml
+secrets.yaml
+*.key
+*.pem
+*.token
+token.txt
+
+# Tauri
 openclaw-manager/src-tauri/target/
-openclaw-manager/node_modules/
-openclaw-manager/dist/
+openclaw-manager/src-tauri/Cargo.lock
+
+# Tool files
 openclaw-manager/tool/node-v*.msi
 openclaw-manager/tool/node-v*.pkg
+tool/node-v*.msi
+tool/node-v*.pkg
+
+# Backup
+_openclaw-manager_git_backup/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
