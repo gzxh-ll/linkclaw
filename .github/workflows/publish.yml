@@ -53,14 +53,30 @@ jobs:
         working-directory: openclaw-manager
         run: npm ci
 
+      - name: Build frontend
+        working-directory: openclaw-manager
+        run: npm run build
+
+      - name: Extract version from tag
+        id: get_version
+        shell: bash
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            VERSION="${{ github.ref_name }}"
+          else
+            VERSION="v0.0.0"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+
       - name: Build & Upload (Tauri)
         uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: openclaw-manager
-          tagName: v__VERSION__
-          releaseName: "OpenClaw Manager v__VERSION__"
+          tagName: ${{ steps.get_version.outputs.version }}
+          releaseName: "OpenClaw Manager ${{ steps.get_version.outputs.version }}"
           releaseBody: "See the assets to download this version and install."
           releaseDraft: false
           prerelease: false
