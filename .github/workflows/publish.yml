@@ -1,0 +1,69 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: "macos-latest"
+            args: "--target aarch64-apple-darwin"
+          - platform: "macos-13"
+            args: "--target x86_64-apple-darwin"
+          - platform: "windows-latest"
+            args: ""
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: openclaw-manager/package-lock.json
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin' || matrix.platform == 'macos-13' && 'x86_64-apple-darwin' || '' }}
+
+      - name: Prepare offline Node installers (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p openclaw-manager/tool
+          curl -L "https://nodejs.org/dist/v22.13.1/node-v22.13.1.pkg" -o "openclaw-manager/tool/node-v22.13.1.pkg"
+
+      - name: Prepare offline Node installers (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force -Path "openclaw-manager\tool" | Out-Null
+          Invoke-WebRequest -Uri "https://nodejs.org/dist/v22.13.1/node-v22.13.1-x64.msi" -OutFile "openclaw-manager\tool\node-v22.13.1-x64.msi"
+
+      - name: Install frontend dependencies
+        working-directory: openclaw-manager
+        run: npm ci
+
+      - name: Build & Upload (Tauri)
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: openclaw-manager
+          tagName: v__VERSION__
+          releaseName: "OpenClaw Manager v__VERSION__"
+          releaseBody: "See the assets to download this version and install."
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}
