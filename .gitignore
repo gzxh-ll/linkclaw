@@ -1,0 +1,7 @@
+openclaw-manager/release/
+openclaw-manager/release_extra/
+openclaw-manager/src-tauri/target/
+openclaw-manager/node_modules/
+openclaw-manager/dist/
+openclaw-manager/tool/node-v*.msi
+openclaw-manager/tool/node-v*.pkg
