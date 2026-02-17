@@ -290,4 +290,4 @@ MIT License - 详见 [LICENSE](LICENSE)
 
 ---
 
-**Made with ❤️ by OpenClaw Team**
+**Made with ❤️ by OpenClaw Team**and linkclaw中文社区
